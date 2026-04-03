@@ -23,7 +23,6 @@ app.use('/search', SearchRoutes);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}. Let's go!`);
-    console.log(process.env.CLOUDINARY_API_KEY);
 });
 
 

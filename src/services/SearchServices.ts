@@ -1,12 +1,11 @@
 import { v2 as Cloudinary } from 'cloudinary';
-import { Page } from '../types';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 const cloudVisionUrl = "https://vision.googleapis.com/v1/images:annotate"
 
-const searchForImage = async (fileBuffer: Buffer, mimetype: string) => {
+const searchForVisuallySimilarImage = async (fileBuffer: Buffer, mimetype: string) => {
     const image = `data:${mimetype};base64,${fileBuffer.toString('base64')}`;
     const imageUrl = await addImageToCloudinary(image);
 
@@ -29,11 +28,15 @@ const searchForImage = async (fileBuffer: Buffer, mimetype: string) => {
 
     if (response.ok) {
         const data = await response.json();
-        console.log('Successfully searched for image. Response -> ', data);
+        const dataArray = Array.from(data.responses) as any[];
+        const imgLinks = dataArray.map((r: any) => {
+            const images = r.webDetection.visuallySimilarImages;
+            return images.map((i: any) => i.url);
+        }).flat();
 
-        const pages = data.responses;
-        console.log('The list of links -> ', JSON.stringify(pages));
-        return [];
+
+        console.log('The list of links -> ', imgLinks);
+        return imgLinks;
     }
     console.log(response);
     throw Error("Error fetching pages");
@@ -50,6 +53,21 @@ const addImageToCloudinary = async (image: string) => {
     return upload.secure_url;
 }
 
+const getWebPages = async (imageUrl: string)=>{
+    const apiEndpoint = "https://serpapi.com/search?engine=google_lens";
+    const response = await fetch(`${apiEndpoint}&url=${imageUrl}&api_key=${process.env.SERP_API_KEY!}`);
+    if(!response.ok){
+        console.log(await response.text());
+        throw Error('Error getting web pages');
+    }
+
+    const data = await response.json();
+    const links = data.visual_matches.map((result: any)=> result.link);
+
+    return links;
+}
+
 export const SearchServices = {
-    searchForImage
+    searchForVisuallySimilarImage,
+    getWebPages
 }
