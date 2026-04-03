@@ -1,6 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
+import { SearchRoutes } from "./routes/search";
 
 
 dotenv.config();
@@ -18,7 +19,11 @@ const corsOptions = {
 
 // Use the CORS middleware
 app.use(cors(corsOptions));
+app.use('/search', SearchRoutes);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}. Let's go!`);
+    console.log(process.env.CLOUDINARY_API_KEY);
 });
+
+
