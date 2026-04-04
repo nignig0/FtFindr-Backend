@@ -19,7 +19,7 @@ const port = process.env.PORT || 5001;
 
 const corsOptions = {
     origin: "*", // Allow requests from this origin
-    methods: ["GET", "POST", "PUT"], // Allow specific methods
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
 };
 
@@ -33,5 +33,4 @@ app.use('/history', HistoryRouter);
 app.listen(port, async () => {
     console.log(`Listening on port ${port}. Let's go!`);
 });
-
 
