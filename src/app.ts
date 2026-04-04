@@ -2,9 +2,15 @@ import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import { SearchRoutes } from "./routes/search";
+import { supabase } from "./supabase";
+import { authRouter } from "./routes/auth";
+import { BookmarkRouter } from "./routes/bookmark";
+import { HistoryRouter } from "./routes/history";
+
 
 
 dotenv.config();
+
 const app = express();
 app.use(express.json());
 
@@ -20,8 +26,11 @@ const corsOptions = {
 // Use the CORS middleware
 app.use(cors(corsOptions));
 app.use('/search', SearchRoutes);
+app.use('/auth', authRouter);
+app.use('/bookmarks', BookmarkRouter);
+app.use('/history', HistoryRouter);
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Listening on port ${port}. Let's go!`);
 });
 

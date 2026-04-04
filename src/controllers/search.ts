@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { SearchServices } from "../services/SearchServices";
+import { History } from "../types";
+import { HistoryService } from "../services/HistoryService";
 
 const searchForVisuallySimilarImages = async (req: Request, res: Response)=>{
     if(!req.file){
@@ -35,7 +37,18 @@ const getWebPages = async (req: Request, res: Response) => {
     }
 
     try {
-        const links = await SearchServices.getWebPages(imageUrl.trim());
+        const links: string[] = await SearchServices.getWebPages(imageUrl.trim());
+        const userId = req.user?.id;
+        const history: Partial<History>[] = links.map((link)=>{
+            return {
+                uid: userId, 
+                imageurl: imageUrl,
+                vendorurl: link,
+                createdat: new Date()
+            }
+        });
+
+        await HistoryService.bulkAddToHistory(history);
 
         res.status(200).send({
             message: "Successfully fetched webpages for image",
