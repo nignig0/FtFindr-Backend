@@ -32,7 +32,7 @@ const createBookmark = async (req: Request, res: Response) => {
         const addBookmarkObj = {
             uid: userId,
             hid: historyId,
-            savedAt: new Date()
+            savedat: new Date()
         }
 
         await BookmarkServices.addBookmark(addBookmarkObj);
@@ -52,6 +52,15 @@ const deleteBookmark = async (req: Request, res: Response) => {
     try {
         const { bookmarkId } = req.params;
 
+        const userId = req.user?.id;
+        const bookmark = await BookmarkServices.getBookmarkById(bookmarkId);
+        if(userId !== bookmark.uid){
+            res.status(401).send({
+                message: "Not authorised"
+            });
+            return;
+        }
+        
         await BookmarkServices.deleteBookmark(bookmarkId);
         res.status(200).send({
             message: 'Successfully deleted bookmark!'

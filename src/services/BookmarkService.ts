@@ -19,8 +19,15 @@ const getBookmarksByUser = async (userId: string)=>{
     return data;
 }
 
+const getBookmarkById = async (bid: string)=>{
+    const {data, error} = await supabase.from(table).select('*').eq('bid', bid);
+    if(error) throw Error(error.message);
+    return data[0];
+}
+
 export const BookmarkServices = {
     addBookmark, 
     deleteBookmark, 
-    getBookmarksByUser
+    getBookmarksByUser,
+    getBookmarkById
 }
