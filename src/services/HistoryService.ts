@@ -23,7 +23,7 @@ const clearHistoryByUser = async (userId: string) => {
 }
 
 const getHistoryByUser = async (userId: string) => {
-    const { data, error } = await supabase.from(table).select('*').eq('uid', userId).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from(table).select('*').eq('uid', userId).order('createdat', { ascending: false });
     if (error) throw Error(error.message);
     return data;
 }
