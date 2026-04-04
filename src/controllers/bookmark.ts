@@ -32,7 +32,7 @@ const createBookmark = async (req: Request, res: Response) => {
         const addBookmarkObj = {
             uid: userId,
             hid: historyId,
-            savedAt: new Date()
+            savedat: new Date()
         }
 
         await BookmarkServices.addBookmark(addBookmarkObj);
