@@ -1,14 +1,23 @@
 import { Request, Response } from "express";
 import { BookmarkServices } from "../services/BookmarkService";
-import { create } from "domain";
 
 const getBookmarksByUser = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
         const bookmarks = await BookmarkServices.getBookmarksByUser(userId!);
+        const bookmarksWithDetails = bookmarks.map((b: Record<string, any>) => {
+            const h = b.history as Record<string, any>;
+            return {
+                bid: b.bid,
+                savedat: b.savedat,
+                imageurl: h?.imageurl,
+                vendorurl: h?.vendorurl,
+                domain: h?.vendorurl ? new URL(h.vendorurl).hostname.replace(/^www\./, '') : null
+            };
+        });
         res.status(200).send({
             message: 'Successfully retrieved bookmarks',
-            data: bookmarks
+            data: bookmarksWithDetails
         });
     } catch (error) {
         console.log('Error retrieving bookmarks -> ', error);
