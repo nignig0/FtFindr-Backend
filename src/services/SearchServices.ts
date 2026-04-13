@@ -62,7 +62,7 @@ const getWebPages = async (imageUrl: string)=>{
     }
 
     const data = await response.json();
-    const links = data.visual_matches.map((result: any)=> result.link);
+    const links = data.visual_matches.map((result: any)=> result.link).slice(0, 5);
 
     return links;
 }

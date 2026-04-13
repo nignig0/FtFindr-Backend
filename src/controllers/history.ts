@@ -5,10 +5,14 @@ const getHistoryByUser = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
         const history = await HistoryService.getHistoryByUser(userId!);
+        const historyWithTitles = history.map((item: Record<string, any>) => ({
+            ...item,
+            title: new URL(item.vendorurl).hostname.replace(/^www\./, '')
+        }));
 
         res.status(200).send({
             message: "Successfully retrieved history",
-            data: history
+            data: historyWithTitles
         });
     } catch (error) {
         console.log("Error retrieving history -> ", error);
