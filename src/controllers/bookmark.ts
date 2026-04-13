@@ -9,6 +9,7 @@ const getBookmarksByUser = async (req: Request, res: Response) => {
             const h = b.history as Record<string, any>;
             return {
                 bid: b.bid,
+                hid: b.hid,
                 savedat: b.savedat,
                 imageurl: h?.imageurl,
                 vendorurl: h?.vendorurl,
