@@ -16,7 +16,7 @@ const deleteBookmark = async (bId: string)=>{
 const getBookmarksByUser = async (userId: string)=>{
     const {data, error} = await supabase
         .from(table)
-        .select('bid, savedat, history(imageurl, vendorurl)')
+        .select('bid, hid, savedat, history(imageurl, vendorurl)')
         .eq('uid', userId)
         .order('savedat', { ascending: false });
     if(error) throw Error(error.message);
